@@ -1,0 +1,29 @@
+version: "3"
+services:
+  server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: server_x
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+    restart: always
+    environment:
+      DJANGO_SETTINGS_MODULE: "settings.local"
+    env_file:
+      - .env
+    ports:
+      - 8000:8000
+    volumes:
+      - ./src:/home/python/app
+
+  db:
+    image: postgres:16-alpine
+    container_name: db_x
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db_data:/var/lib/postgresql/data
+    env_file:
+      - .env
